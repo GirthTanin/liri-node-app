@@ -171,9 +171,9 @@ function musicSpot (s) {
             if (err) {
                 console.log("the random file isn't working " + err);
             }
-            dataArray = data.split(",")
+            dataArray = data.split(",");
             console.log(dataArray);
-            begin(dataArray[0], dataArray[1]);
+            begin("dataArray");
         });
     }
     
