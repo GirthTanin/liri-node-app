@@ -47,7 +47,15 @@ function begin(firstInput, secondInput) {
 
 // this next part should be where Liri takes in: my-tweets
 function flockOfTweets() {
-    var twit = new Twitter(keys.twitter)
+    var twit = new Twitter(keys.twitter);
+        var parameters = {
+            screen_name: accountUser
+        };
+        twitter.get("statuses/user_timeline", params, function(err, tweets, response) {
+            if (!err) {
+                
+            }
+        })
 }
 
 
