@@ -139,13 +139,13 @@ function musicSpot (s) {
             movie = "Dancer in the Dark";
             console.log ("Bjork!");
             console.log (seperated);
-        };
+            }
 // This one is different (easier?) than the others, but my brain isn't quite dancing with it. 
         var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=shor&apikey=trilogy"; {
             request(queryURL, function (error, response, body) {
                 if (error) {
                     return console.log("Movie melted " + error);
-                }
+                    }
                 var movieBuff = JSON.parse(body);
                 var title = output.Title;
                 var year = output.Year;
@@ -161,12 +161,21 @@ function musicSpot (s) {
                 addToLog(logMovie);
 
                 }
-            }
-        )
+            );
         }
     }
-        
 
-
-
+    // this is supposed to do the random part.
+    function random() {
+        fs.readFile("random.txt", "utf8", function(err, data) {
+            if (err) {
+                console.log("the random file isn't working " + err);
+            }
+            dataArray = data.split(",")
+            console.log(dataArray);
+            begin(dataArray[0], dataArray[1]);
+        });
+    }
+    
+// this starts it all
 begin(firstInput, secondInput);
