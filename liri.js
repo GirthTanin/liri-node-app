@@ -147,14 +147,14 @@ function musicSpot (s) {
                     return console.log("Movie melted " + error);
                     }
                 var movieBuff = JSON.parse(body);
-                var title = output.Title;
-                var year = output.Year;
-                var imdbRating = output.Ratings[0].Value;
-                var rottenRating = output.Ratings[1].Value;
-                var country = output.Country;
-                var lang = output.Language;
-                var plot = output.Plot;
-                var actors = output.Actors;
+                var title = movieBuff.Title;
+                var year = movieBuff.Year;
+                var imdbRating = movieBuff.Ratings[0].Value;
+                var rottenRating = movieBuff.Ratings[1].Value;
+                var country = movieBuff.Country;
+                var lang = movieBuff.Language;
+                var plot = movieBuff.Plot;
+                var actors = movieBuff.Actors;
                 var logMovie = (`\n ${seperated} \n  Title: ${title} \n Movie Release: ${year} \n IMDB rating: ${imdbRating} \n Rotten Tomatoes rating: ${rottenRating} \n Country: ${country} \n Language: ${lang} \n Plot: ${plot} \n Actors: ${actors} \n ${seperated}`);
 
                 console.log(logMovie);
