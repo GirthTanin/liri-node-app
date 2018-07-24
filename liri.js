@@ -1,5 +1,5 @@
 // this will connect to my .env page
-require ("dotenv").config();
+require("dotenv").config();
 
 // this will connect the request module
 var request = require("request");
@@ -14,6 +14,7 @@ var ES6 = require("es6-shim");
 var keys = require("./keys.js");
 
 // this is to connect the log file
+// I don't need this as it should write a new one
 // var log = require("./log.txt");
 
 // I'm totally new to Spotify, so I'm not sure how this all comes together
@@ -22,8 +23,9 @@ var Spotify = require("node-spotify-api");
 // I think twitter is a fast way to make a fool of myself so I typically keep my mouth shut...
 var Twitter = require("twitter");
 
-var spotify = new Spotify(keys.spotify);
-var twit = new Twitter(keys.twitter);
+// I need to have this inside my function
+// var spotify = new Spotify(keys.spotify);
+// var twit = new Twitter(keys.twitter);
 
 console.log("the requires are done");
 // this is where I should store the inputs as empty to be changed later
@@ -40,7 +42,7 @@ var seperated = "+++++++++++++++++++++++";
 
 // is it better to have this stand alone to be called?
 function err () {
-    console.log("it's not quite right" + err);
+   // console.log("it's not quite right" + err);
 }
 
 
@@ -107,8 +109,8 @@ function musicSpot (s) {
         noQuery = "The Sign Ace of Base";
     }
 
-    function musicSpot (secondInput) {
-        var songTitle = secondInput;
+    var spotify = new Spotify(keys.spotify);
+
         spotify.search({
             type: "track",
             query: "query"
