@@ -24,8 +24,8 @@ var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
 
 // I need to have this inside my function
-// var spotify = new Spotify(keys.spotify);
-// var twit = new Twitter(keys.twitter);
+var spotify = new Spotify(keys.spotify);
+var twit = new Twitter(keys.twitter);
 
 console.log("the requires are done");
 // this is where I should store the inputs as empty to be changed later
@@ -33,46 +33,30 @@ var dataArray = [];
 var firstInput = false;
 var secondInput = "";
 var nodeArgv = process.argv;
+var noInput = "";
+
+if (process.argv.length > 3) {
+    noInput=false;
+} else {
+    noInput=true;
+}
+
 var firstInput = process.argv[2];
-// var secondInput = process.argv[3];
-// does this next one need to be split?
+
 var secondInput = process.argv.splice(3).join("");
 
 var seperated = "+++++++++++++++++++++++";
 
 // is it better to have this stand alone to be called?
-function err () {
-   // console.log("it's not quite right" + err);
+function error () {
+   // console.log("it's not quite right" + error);
 }
 
 
 // how to get the writing to a log.txt
 var addToLog = function(data) {
-    fs.appendFile("log.txt", data + "\n", err);
+    fs.appendFile("log.txt", data + "\n", error);
 };
-
-
-
-// This is what will determine what is being asked for in the first input:
-function begin(firstInput, secondInput) {
-    switch (firstInput) {
-        case "my-tweets":flockOfTweets(secondInput);
-        break;
-
-        case "spotify-this-song":musicSpot(secondInput);
-        break;
-
-        case "movie-this":cinemaInfo(secondInput);
-        break;
-
-        case "do-what-it-says": random();
-        break;
-
-        default: console.log("What do you want Liri to get? \n my-tweets \n spotify-this-song \n movie-this \n do-what-it-says");
-        
-    }
-}
-
 
 // this next part should be where Liri takes in: my-tweets
 function flockOfTweets() {
@@ -80,8 +64,8 @@ function flockOfTweets() {
         var parameters = {
             screen_name: "GirthTanin", count: 20
         };
-        twit.get("statuses/user_timeline", parameters, function(err, tweets, response) {
-            if (err) {
+        twit.get("statuses/user_timeline", parameters, function(error, tweets, response) {
+            if (error) {
                 console.log("tweets");
                 console.log("tweets.text");
             }
@@ -91,7 +75,7 @@ function flockOfTweets() {
                 tweetedWhen = tweets[i].created_at;
                 tweet = tweets[i].text;
                 // JShint is saying ES6 might not work...
-            var logTweet = `\n${seperated}${tweetedWhen}\n${tweet}\n${seperated}\n`;
+            var logTweet = `\n${seperated}\n${tweetedWhen}\n${tweet}\n${seperated}\n`;
             console.log(logTweet);
             addToLog(logTweet);
             }
@@ -99,51 +83,52 @@ function flockOfTweets() {
 }
 
 // this next part should be where Liri gathers in: spotify-this-song
-function musicSpot (s) {
-    noQuery = process.argv[3];
-    if (s === secondInput) {
-        noQuery = s;
-    }
-    else if (noQuery === undefined) {
-        // what is the default for this? "The Sign"
-        noQuery = "The Sign Ace of Base";
+function musicSpot (secondInput) {
+    if (secondInput === noInput) {
+        var ace = 'Musician is: "Ace of Base"';
+        var sign = 'Title is: "The Sign"';
+        var alb = 'Album Title is: "The Sign (US Album) [Remastered]"';
+        var aces = 'Song link: "https://open.spotify.com/track/0hrBpAOgrt8RXigk83LLNE"';
+        
+        var aceBase = `\n${seperated}\n${ace}\n${sign}\n${alb}\n${aces}\n${seperated}`;
+        console.log(aceBase);
+        addToLog(aceBase);   
+    } else
+    {
+
+    spotify.search({
+        type: "track",
+        query: secondInput
+        }, 
+        function (error, data) {
+            if (error) {
+                return console.log("Spotify error occurred " + error);
+            }
+                var songInfo = data.tracks.items[0];
+                var artistName = JSON.stringify(songInfo.artists[0].name);
+                var songName = JSON.stringify(songInfo.name);
+                var albumName = JSON.stringify(songInfo.album.name);
+                var trackUrl = JSON.stringify(songInfo.external_urls.spotify);
+                var logSong = `\n ${seperated} \n Musician is: ${artistName} \n Title is: ${songName} \n Album Title is: ${albumName} \n Song link: ${trackUrl} \n ${seperated} \n`;
+                console.log (logSong);
+                addToLog (logSong);
+                    
+                });
     }
 
-    var spotify = new Spotify(keys.spotify);
-
-        spotify.search({
-            type: "track",
-            query: "query"
-            }, 
-            function (err, data) {
-                if (err) {
-                    console.log("Spotify error occurred " + err);
-                    console.log(err.data);
-                if (noQuery) {
-                    var songInfo = data.tracks.items[0];
-                    var artistName = JSON.stringify(songInfo.artists[0].name);
-                    var songName = JSON.stringify(songInfo.name);
-                    var albumName = JSON.stringify(songInfo.album.name);
-                    var trackUrl = JSON.stringify(songInfo.external_urls.spotify);
-                    var logSong = `\n ${seperated} \n Musician is: ${artistName} \n Title is: ${songName} \n Album Title is: ${albumName} \n Song link: ${trackUrl} \n ${seperated} \n`;
-                    console.log (logSong);
-                    addToLog (logSong);
-                    }
-                }
-            });
-        }
-    }
+}
+    
 
     // This will be the OMDb part, starting with the default choice
     function cinemaInfo () {
         var movie = process.argv[3];
-        if (movie === undefined) {
+        if (movie == "") {
             movie = "Dancer in the Dark";
             console.log ("Bjork!");
             console.log (seperated);
             }
 // This one is different (easier?) than the others, but my brain isn't quite dancing with it. 
-        var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=shor&apikey=trilogy"; {
+        var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"; {
             request(queryURL, function (error, response, body) {
                 if (error) {
                     return console.log("Movie melted " + error);
@@ -169,15 +154,37 @@ function musicSpot (s) {
 
     // this is supposed to do the random part.
     function random() {
-        fs.readFile("random.txt", "utf8", function(err, data) {
-            if (err) {
-                console.log("the random file isn't working " + err);
+        fs.readFile("random.txt", "utf8", function(error, data) {
+            if (error) {
+                console.log("the random file isn't working " + error);
             }
             dataArray = data.split(",");
             console.log(dataArray);
-            begin("dataArray");
+            begin(dataArray);
         });
     }
+
+    // This is what will determine what is being asked for in the first input:
+function begin(firstInput, secondInput) {
+    switch (firstInput) {
+        case "my-tweets":flockOfTweets();
+        break;
+
+        case "spotify-this-song":musicSpot(secondInput);
+        break;
+
+        case "movie-this":cinemaInfo(secondInput);
+        break;
+
+        case "do-what-it-says": random();
+        break;
+
+        default: console.log("What do you want Liri to get? \n my-tweets \n spotify-this-song \n movie-this \n do-what-it-says");
+        
+    }
+}
+
+
     
 // this starts it all
 begin(firstInput, secondInput);

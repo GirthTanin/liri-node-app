@@ -21,6 +21,7 @@
     "dotenv": "^6.0.0",
     "es6-shim": "^0.35.3",
     "fs": "0.0.1-security",
+    "inquirer": "^6.1.0",
     "node-spotify-api": "^1.0.7",
     "request": "^2.87.0",
     "twitter": "^1.7.1"
