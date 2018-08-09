@@ -126,9 +126,9 @@ function musicSpot (secondInput) {
             movie = "Dancer in the Dark";
             console.log ("Bjork!");
             console.log (seperated);
-            }
+            } else {
 // This one is different (easier?) than the others, but my brain isn't quite dancing with it. 
-        var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"; {
+        var queryURL = "https://www.omdbapi.com/?t=" + secondInput + "&y=&plot=short&apikey=trilogy"; {
             request(queryURL, function (error, response, body) {
                 if (error) {
                     return console.log("Movie melted " + error);
@@ -147,8 +147,8 @@ function musicSpot (secondInput) {
                 console.log(logMovie);
                 addToLog(logMovie);
 
-                }
-            );
+                });
+            }
         }
     }
 
