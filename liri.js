@@ -122,7 +122,7 @@ function musicSpot (secondInput) {
     // This will be the OMDb part, starting with the default choice
     function cinemaInfo () {
         var movie = process.argv[3];
-        if (movie == "") {
+        if (movie === undefined) {
             movie = "Dancer in the Dark";
             console.log ("Bjork!");
             console.log (seperated);
