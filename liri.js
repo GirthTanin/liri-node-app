@@ -66,7 +66,7 @@ function flockOfTweets() {
         };
         twit.get("statuses/user_timeline", parameters, function(error, tweets, response) {
             if (error) {
-                console.log("tweets");
+                console.log(error);
                 console.log("tweets.text");
             }
             var tweetedWhen = "";
