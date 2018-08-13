@@ -43,6 +43,7 @@ if (process.argv.length > 3) {
 
 var firstInput = process.argv[2];
 
+// this will only allow for one word songs, i need to think of how to get a whole song title
 var secondInput = process.argv.splice(3).join("");
 
 var seperated = "+++++++++++++++++++++++";
@@ -64,13 +65,13 @@ function flockOfTweets() {
         var parameters = {
             screen_name: "GirthTanin", count: 20
         };
-        twit.get("statuses/user_timeline", parameters, function(error, tweets, response) {
+        twit.get("statuses/user_timeline", parameters, function(error, response) {
             if (error) {
                 console.log(error);
                 console.log("tweets.text");
             }
             var tweetedWhen = "";
-            var tweet = "";
+            var tweets = response;
             for (var i = 0; i < tweets.length; i++) {
                 tweetedWhen = tweets[i].created_at;
                 tweet = tweets[i].text;
@@ -84,7 +85,8 @@ function flockOfTweets() {
 
 // this next part should be where Liri gathers in: spotify-this-song
 function musicSpot (secondInput) {
-    if (secondInput === noInput) {
+    console.log("\n----------------- " + secondInput + " -------- \n");
+    if (secondInput === "") {
         var ace = 'Musician is: "Ace of Base"';
         var sign = 'Title is: "The Sign"';
         var alb = 'Album Title is: "The Sign (US Album) [Remastered]"';
@@ -121,12 +123,32 @@ function musicSpot (secondInput) {
 
     // This will be the OMDb part, starting with the default choice
     function cinemaInfo () {
-        var movie = process.argv[3];
-        if (movie === undefined) {
+        var movie = secondInput;
+        if (movie === "") {
             movie = "Dancer in the Dark";
             console.log ("Bjork!");
             console.log (seperated);
-            } else {
+            var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"; {
+                request(queryURL, function (error, response, body) {
+                    if (error) {
+                        return console.log("Movie melted " + error);
+                        }
+                    var movieBuff = JSON.parse(body);
+                    var title = movieBuff.Title;
+                    var year = movieBuff.Year;
+                    var imdbRating = movieBuff.Ratings[0].Value;
+                    var rottenRating = movieBuff.Ratings[1].Value;
+                    var country = movieBuff.Country;
+                    var lang = movieBuff.Language;
+                    var plot = movieBuff.Plot;
+                    var actors = movieBuff.Actors;
+                    var logMovie = (`\n ${seperated} \n  Title: ${title} \n Movie Release: ${year} \n IMDB rating: ${imdbRating} \n Rotten Tomatoes rating: ${rottenRating} \n Country: ${country} \n Language: ${lang} \n Plot: ${plot} \n Actors: ${actors} \n ${seperated}`);
+    
+                    console.log(logMovie);
+                    addToLog(logMovie);
+                    });
+            }
+         } else {
 // This one is different (easier?) than the others, but my brain isn't quite dancing with it. 
         var queryURL = "https://www.omdbapi.com/?t=" + secondInput + "&y=&plot=short&apikey=trilogy"; {
             request(queryURL, function (error, response, body) {
@@ -154,13 +176,32 @@ function musicSpot (secondInput) {
 
     // this is supposed to do the random part.
     function random() {
-        fs.readFile("random.txt", "utf8", function(error, data) {
+        fs.readFile("./random.txt", "utf8", function(error, data) {
             if (error) {
                 console.log("the random file isn't working " + error);
             }
             dataArray = data.split(",");
             console.log(dataArray);
-            begin(dataArray);
+            // begin("dataArray");
+            spotify.search({
+                type: "track",
+                query: dataArray[1]
+                }, 
+                function (error, data) {
+                    if (error) {
+                        return console.log("Spotify error occurred " + error);
+                    }
+                        var songInfo = data.tracks.items[0];
+                        var artistName = JSON.stringify(songInfo.artists[0].name);
+                        var songName = JSON.stringify(songInfo.name);
+                        var albumName = JSON.stringify(songInfo.album.name);
+                        var trackUrl = JSON.stringify(songInfo.external_urls.spotify);
+                        var logSong = `\n ${seperated} \n Musician is: ${artistName} \n Title is: ${songName} \n Album Title is: ${albumName} \n Song link: ${trackUrl} \n ${seperated} \n`;
+                        console.log (logSong);
+                        addToLog (logSong);
+                            
+                        });
+            
         });
     }
 
