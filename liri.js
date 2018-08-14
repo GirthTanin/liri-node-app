@@ -27,7 +27,7 @@ var Twitter = require("twitter");
 var spotify = new Spotify(keys.spotify);
 var twit = new Twitter(keys.twitter);
 
-console.log("the requires are done");
+// console.log("the requires are done");
 // this is where I should store the inputs as empty to be changed later
 var dataArray = [];
 var firstInput = false;
@@ -181,7 +181,7 @@ function musicSpot (secondInput) {
                 console.log("the random file isn't working " + error);
             }
             dataArray = data.split(",");
-            console.log(dataArray);
+            // console.log(dataArray);
             // begin("dataArray");
             spotify.search({
                 type: "track",
